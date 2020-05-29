@@ -1,55 +1,31 @@
 package br.com.meunetflix.classificacaofilmesservice;
 
-import org.springframework.boot.SpringApplication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
 
-public class classificacaoApi {
+@RestController
+class ClassificacaoApi {
 
-    private static final String mensagemOk = "Ok! Você está apto para ver esse filme!";
-    private static final String mensagemNok = "Desculpe! Este título não está disponível para a sua idade!";
+    private static final String MENSAGEM_OK = "Ok! Você está apto a ver esse filme!";
+    private static final String MENSAGEM_NOK = "Desculpe! Este filme não está disponível para a sua idade!";
 
-    private String classificao;
-    private Integer idade;
-
-    public classificacaoApi(){
+    public ClassificacaoApi(){
 
     }
-
-    public classificacaoApi(String classificao, Integer idade) {
-        this.classificao = classificao;
-        this.idade = idade;
-    }
-
-    public String getClassificao() {
-        return classificao;
-    }
-
-    public void setClassificao(String classificao) {
-        this.classificao = classificao;
-    }
-
-    public Integer getIdade() {
-        return idade;
-    }
-
-    public void setIdade(Integer idade) {
-        this.idade = idade;
-    }
-
-    @Override
-    public String toString (){
-        Boolean apto = classificao.equals("L") ||
-                classificao.equals("PA") && idade >=12 ||
-                classificao.equals("AD") && idade >=14 ||
-                classificao.equals("MI") && idade >=18;
-
-        if (apto == true){
-          return  mensagemOk;
-        } else {
-            return mensagemNok;
-
+    @GetMapping("classificacoes/{classificacao}/idades/{idade}")
+    public String consultarClassificacao(@PathVariable("classificacao") String classificacao,
+                                         @PathVariable("idade") Integer idade) {
+        boolean apto = classificacao.equals("L") ||
+                classificacao.equals("PA") && idade >= 12 ||
+                classificacao.equals("AD") && idade >= 14 ||
+                classificacao.equals("MI") && idade >= 18;
+        if (apto){
+            return MENSAGEM_OK;
+        }
+        else{
+            return MENSAGEM_NOK;
         }
     }
+
 }
-
-
-
